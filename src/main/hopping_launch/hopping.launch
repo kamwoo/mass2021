@@ -1,0 +1,6 @@
+<launch>
+<node pkg="gps" type="gps.py" name="gps"/>
+<node pkg="imu" type="imu.py" name="imu"/>
+<node pkg="main" type="main.py" name="main"/>
+<node pkg="to_arduino" type="to_arduino.py" name="to_arduino"/>
+</launch>

@@ -1,4 +1,4 @@
-#! /usr/bin/python3.6
+#! /usr/bin/python3
 
 import rospy
 from std_msgs.msg import Float32MultiArray, MultiArrayDimension, Float32
@@ -31,6 +31,4 @@ if __name__ == '__main__':
         gps_talker()
     except rospy.ROSInterruptException:
         pass
-
-
 
