@@ -1,69 +1,32 @@
 from math import *
 
-## 35.545000, 129.1555
+def bearingP1toP2(p1,p2):
+    P1_latitude, P1_longitude, P2_latitude, P2_longitude = p1[0], p1[1], p2[0], p2[1]
+    Cur_Lat_radian = P1_latitude * (3.141592 / 180)
+    Cur_Lon_radian = P1_longitude * (3.141592 / 180)
+    Dest_Lat_radian = P2_latitude * (3.141592 / 180)
+    Dest_Lon_radian = P2_longitude * (3.141592 / 180)
+    radian_distance = 0
+    radian_distance = acos(sin(Cur_Lat_radian) * sin(Dest_Lat_radian) + cos(Cur_Lat_radian) * \
+                           cos(Dest_Lat_radian) * cos(Cur_Lon_radian - Dest_Lon_radian))
+    radian_bearing = acos((sin(Dest_Lat_radian) - sin(Cur_Lat_radian) * cos(radian_distance)) / (cos(Cur_Lat_radian) * \
+                                                                                                 sin(radian_distance)))
+    true_bearing = 0
 
-## point 3D이다. [x, y, z]
-def CalculateInnerProduct(tempList, temptempList):
-    result = tempList[0] * temptempList[0] + tempList[1] * temptempList[1] + tempList[2] * temptempList[2]
-    return result
+    if sin(Dest_Lon_radian - Cur_Lon_radian) < 0:
+        true_bearing = radian_bearing * (180 / 3.141592)
+        true_bearing = 360 - true_bearing
+    else:
+        true_bearing = radian_bearing * (180 / 3.141592)
 
-def CalculateOuterProduct(tempList, temptempList):
-    result = [0.0, 0.0, 0.0]
+    return true_bearing
 
-    result[0] = tempList[1] * temptempList[2] - tempList[2] * temptempList[1]
-    result[1] = -(tempList[0] * temptempList[2] - tempList[2] * temptempList[0])
-    result[2] = tempList[0] * temptempList[1] - tempList[1] * temptempList[0]
-    return result
+p0 = [35.54536462025495, 129.25149566155892]
+p1 = [35.54532374971028, 129.2515043973441]
+p2 = [35.54543747639157, 129.25178175852275]
+p3 = [35.54538949796758, 129.25179923009307]
 
-## tempList = 시작 , temptempList = 끝
-def CalculateVector(tempList, temptempList):
-    result = [0.0, 0.0, 0.0]
+x1 = [35.54536462025495, 129.25159175519565]
 
-    result[0] = temptempList[0] - tempList[0]
-    result[1] = temptempList[1] - tempList[1]
-    result[2] = temptempList[2] - tempList[2]
+print(bearingP1toP2(p0,p2))
 
-    return result
-
-def CalculateDistance(tempPoint1, tempPoint2):
-    return sqrt((tempPoint2[1] - tempPoint1[1]) ** 2.0 + (tempPoint2[0] - tempPoint1[0]) ** 2.0)
-
-def CalculateRelativePoint(li):
-    tempLi = [0.0, 0.0, 0.0]
-    gps_li[0] = [35.54527, 129.2515, 0.0]
-    gps_li[1] = [35.54526, 129.25144, 0.0]
-    gps_li[2] = [35.54516, 129.25148, 0.0]
-    gps_li[3] = [35.54518, 129.25154, 0.0]
-    zVector = [0.0, 0.0 , 30.0]
-    stadiumWidth = 5.0
-    stadiumHeight = 15.0
-    bottomMaxLi = gps_li[1]
-    bottomMinLi = gps_li[0]
-
-    xRelativeVector = CalculateVector(gps_li[0], gps_li[1])
-    yRelativeVector = CalculateVector(gps_li[0], gps_li[3])
-    objectVector = CalculateVector(gps_li[0], li)
-
-    xOuter = CalculateOuterProduct(yRelativeVector, zVector)
-    yOuter = CalculateOuterProduct(zVector, xRelativeVector)
-
-    xRatio = (CalculateInnerProduct(xOuter, objectVector) / CalculateInnerProduct(xOuter, xRelativeVector))
-    yRatio = (CalculateInnerProduct(yOuter, objectVector) / CalculateInnerProduct(yOuter, yRelativeVector))
-
-    tempLi[0] = stadiumWidth * xRatio
-    tempLi[1] = stadiumHeight * yRatio
-
-    return tempLi
-
-gps_li = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
-
-##35.54523, 129.25149
-##35.54522740504817, 129.25149201974645
-##35.545205035467944, 129.25150878355274
-##35.545191395476934, 129.25150543079147
-##35.54518812187876, 129.25148598477622
-##35.545186485079604, 129.25148062035822
-##35.54517775548361, 129.25151683017975
-Llll = [35.54517775548361, 129.25151683017975, 0.0]
-temptemptemp = CalculateRelativePoint(Llll)
-print(temptemptemp)
