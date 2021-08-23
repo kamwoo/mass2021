@@ -78,9 +78,66 @@ class CalculateClass :
     ## require two point list[0,1]
     ## 순서 필요 x
     ## tempPoint[0] = xValue , tempPoint[1] = yValue
-    ## 점과 점사이의 거기를 계산한다. / 점이 x와 y점을 가지기 때문에 2개의 리스트가 필요하다.
+    ## 점과 점사이의 거기를 계산한다. / 점이 x와 y점을 가지기 때문에 2개의 리스트가 필요하다
     def CalculateDistance (self, tempPoint1, tempPoint2):
-        return sqrt((tempPoint2[1] - tempPoint1[1]) ** 2.0 + (tempPoint2[0] - tempPoint1[0]) ** 2.0)
+        P1_latitude, P1_longitude, P2_latitude, P2_longitude = tempPoint1[0], tempPoint1[1], tempPoint2[0], tempPoint2[1]
+        if (P1_latitude == P2_latitude) and (P1_longitude == P2_longitude):
+            return 0
+
+        e10 = P1_latitude * pi / 180
+        e11 = P1_longitude * pi / 180
+        e12 = P2_latitude * pi / 180
+        e13 = P2_longitude * pi /180
+
+        c16 = 6356752.314140910
+        c15 = 6378137.000000000
+        c17 = 0.0033528107
+        f15 = c17 + c17 * c17
+        f16 = f15 / 2
+        f17 = c17 * c17 /2
+        f18 = c17 * c17 /8
+        f19 = c17 * c17 /16
+        c18 = e13 - e11
+        c20 = (1-c17) * tan(e10)
+        c21 = atan(c20)
+        c22 = sin(c21)
+        c23 = cos(c21)
+        c24 = (1 - c17) * tan(e12)
+        c25 = atan(c24)
+        c26 = sin(c25)
+        c27 = cos(c25)
+        c29 = c18
+        c31 = (c27 * sin(c29) * c27 * sin(c29)) + (c23 * c26 - c22 *c27 * cos(c29))*\
+                (c23 * c26 - c22 * c27 * cos(c29))
+        c33 = (c22 * c26) + (c23 * c27 * cos(c29))
+        c35 = sqrt(c31) / c33
+        c36 = atan(c35)
+        c38 = 0
+
+        if c31 == 0:
+            c38 = 0
+        else :
+            c38 = c23 * c27 * sin(c29) / sqrt(c31)
+
+        c40 = 0
+
+        if (cos(asin(c38)) * cos(asin(c38))) == 0:
+            c40 = 0
+        else:
+            c40 = c33 -2 * c22 * c26 / (cos(asin(c38)) * cos(asin(c38)))
+
+        c41 = cos(asin(c38)) * cos(asin(c38)) * (c15 * c15 - c16 * c16) / (c16* c16)
+        c43 = 1 + c41 / 16384 * (4096 + c41 * (-768 + c41 * (320 - 175 * c41)))
+        c45 = c41 / 1024 * (256 + c41 *(-128 + c41 * (74-47 * c41)))
+        c47 = c45 * sqrt(c31) * (c40 + c45 / 4 * (c33 * (-1 + 2*c40*c40)- \
+                c45 / 6*c40*(-3 + 4*c31)*(-3 +4 * c40 *c40)))
+        c50 = c17 / 16 * cos(asin(c38))* cos(asin(c38)) * \
+                (4+c17*(4-3*cos(asin(c38))*cos(asin(c38))))
+        c52 = c18 + (1-c50)*c17 * c38 * (acos(c33) + c50 * sin(acos(c33)) * \
+                (c40 + c50 * c33 * (-1+ 2*c40*c40)))
+        c54 = c16 * c43 * (atan(c35) - c47)
+
+        return c54
         
     ## require three point list[0,1]
     ## First point = Base start point , Second point = Base end point , Third point = Object point
